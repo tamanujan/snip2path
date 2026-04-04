@@ -1,0 +1,32 @@
+{
+    "name": "${localWorkspaceFolderBasename}",
+    "image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm",
+    
+    // コンテナ名をフォルダ名に基づいた名前に固定する設定
+    "runArgs": [
+        "--name", "${localWorkspaceFolderBasename}-container"
+    ],
+
+    "customizations": {
+        "vscode": {
+            "extensions": [
+                "ms-python.python",
+                "ms-python.vscode-pylance",
+                "mhutchie.git-graph",
+                "christian-kohler.path-intellisense"
+            ],
+            "settings": {
+                "python.defaultInterpreterPath": "/usr/local/bin/python",
+                "python.analysis.typeCheckingMode": "basic"
+            }
+        }
+    },
+
+    // ワークスペースのパス設定
+    "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
+
+    // 必要に応じてコンテナ作成時にライブラリをインストール
+    // "postCreateCommand": "pip install -r requirements.txt",
+
+    "remoteUser": "vscode"
+}
