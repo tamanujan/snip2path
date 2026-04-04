@@ -2,9 +2,11 @@
     "name": "${localWorkspaceFolderBasename}",
     "image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm",
     
-    // コンテナ名をフォルダ名に基づいた名前に固定する設定
     "runArgs": [
-        "--name", "${localWorkspaceFolderBasename}-container"
+        "--name", "${localWorkspaceFolderBasename}-container",
+        // GUIを表示するためにホストのネットワークとディスプレイを共有
+        "--net=host",
+        "-e", "DISPLAY=${localWorkspaceFolderEnv:DISPLAY}"
     ],
 
     "customizations": {
@@ -22,11 +24,10 @@
         }
     },
 
-    // ワークスペースのパス設定
     "workspaceFolder": "/workspaces/${localWorkspaceFolderBasename}",
 
-    // 必要に応じてコンテナ作成時にライブラリをインストール
-    // "postCreateCommand": "pip install -r requirements.txt",
+    // PySide6(Qt)を動かすために必要なシステムパッケージをインストール
+    "postCreateCommand": "sudo apt-get update && sudo apt-get install -y libgl1-mesa-glx libegl1-mesa libdbus-1-3 libxkbcommon-x11-0 libxcb-cursor0 libxcb-icccm4 libxcb-keysyms1 libxcb-shape0 libxcb-xfixes0 libxcb-xinerama0 libxcb-randr0 libxcb-render-util0 libxcb-util1 libx11-xcb1 && pip install -r requirements.txt",
 
     "remoteUser": "vscode"
 }
