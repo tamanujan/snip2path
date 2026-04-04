@@ -1,0 +1,20 @@
+# Python 関連（キャッシュなど）
+__pycache__/
+*.py[cod]
+*$py.class
+.venv/
+env/
+venv/
+
+# 今回のアプリが生成する画像フォルダ
+# コンテナと共有する実体はローカルに置くが、Git管理からは外す
+.snips/
+
+# エディタ設定
+.vscode/
+.idea/
+
+# OS固有のゴミ
+Thumbs.db
+Desktop.ini
+.DS_Store
