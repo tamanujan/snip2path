@@ -4,24 +4,32 @@ from PySide6.QtGui import QPainter, QColor, QPen
 
 class SnippingOverlay(QWidget):
     snip_finished = Signal(QRect)
+    
     def __init__(self):
         super().__init__()
         self.setWindowFlags(Qt.FramelessWindowHint | Qt.WindowStaysOnTopHint | Qt.Tool)
         self.setAttribute(Qt.WA_TranslucentBackground)
+        self.setFocusPolicy(Qt.StrongFocus) # キー入力を受け付けるために追加
         self.setCursor(Qt.CrossCursor)
         self.showFullScreen()
+        
         self.start_point = QPoint()
         self.end_point = QPoint()
         self.is_selecting = False
+
+    def keyPressEvent(self, event):
+        # ESCキーでキャンセルして閉じる
+        if event.key() == Qt.Key_Escape:
+            self.close()
 
     def paintEvent(self, event):
         p = QPainter(self)
         p.fillRect(self.rect(), QColor(0, 0, 0, 100))
         if self.is_selecting:
             r = QRect(self.start_point, self.end_point).normalized()
-            p.setCompositionMode(QPainter.CompositionMode_Clear)
+            p.setCompositionMode(QPainter.CompositionMode.CompositionMode_Clear)
             p.fillRect(r, Qt.transparent)
-            p.setCompositionMode(QPainter.CompositionMode_SourceOver)
+            p.setCompositionMode(QPainter.CompositionMode.CompositionMode_SourceOver)
             p.setPen(QPen(QColor(255, 255, 255), 2))
             p.drawRect(r)
 
@@ -40,5 +48,6 @@ class SnippingOverlay(QWidget):
         if e.button() == Qt.LeftButton:
             self.is_selecting = False
             r = QRect(self.start_point, self.end_point).normalized()
-            if r.width() > 5: self.snip_finished.emit(r)
+            if r.width() > 5 and r.height() > 5:
+                self.snip_finished.emit(r)
             self.close()
