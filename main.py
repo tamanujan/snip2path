@@ -14,10 +14,11 @@ try:
     from core.capture import SnipCapturer
 except ImportError:
     class ProjectManager:
-        def __init__(self): self.master_img_path = None
-        def save_master_path(self, path): pass
+        def __init__(self):
+            self.app_dir = pathlib.Path.home() / ".snip2path"
+            self.master_img_path = self.app_dir / "latest.png"
         def link_to_project(self, path): return True, ""
-        def get_latest_path(self): return ""
+        def get_latest_path(self): return str(self.master_img_path)
     class SnipCapturer:
         def __init__(self, mgr): pass
         def capture_and_save(self, rect): return True, ""
@@ -65,7 +66,7 @@ class MainMenu(QWidget):
         self.content.setObjectName("ContentFrame")
         c_layout = QVBoxLayout(self.content)
         
-        self.status_label = QLabel("Storage: NOT SET")
+        self.status_label = QLabel("Storage: —")
         self.status_label.setObjectName("StatusLabel")
         c_layout.addWidget(self.status_label)
         
@@ -75,14 +76,9 @@ class MainMenu(QWidget):
         self.btn_snip.clicked.connect(self.logic.start_snipping)
         c_layout.addWidget(self.btn_snip)
         
-        low_layout = QHBoxLayout()
         self.btn_link = QPushButton("🔗 Link to Project")
         self.btn_link.clicked.connect(self.logic.ui_link_project)
-        self.btn_config = QPushButton("⚙️ Change Storage")
-        self.btn_config.clicked.connect(self.logic.ui_set_master)
-        low_layout.addWidget(self.btn_link)
-        low_layout.addWidget(self.btn_config)
-        c_layout.addLayout(low_layout)
+        c_layout.addWidget(self.btn_link)
         
         layout.addWidget(self.content)
         self.update_status()
@@ -92,8 +88,8 @@ class MainMenu(QWidget):
             self.status_label.setText(message)
             QTimer.singleShot(3000, lambda: self.update_status())
             return
-        path = self.logic.project_mgr.master_img_path
-        self.status_label.setText(f"Storage: {path.parent if path else 'NOT SET'}")
+        app_dir = self.logic.project_mgr.app_dir
+        self.status_label.setText(f"Storage: {app_dir}")
 
     def closeEvent(self, event):
         QApplication.quit()
@@ -108,21 +104,13 @@ class SnipApp:
         self.menu = MainMenu(self)
         self.viewer = None
 
-    def ui_set_master(self):
-        path = QFileDialog.getExistingDirectory(self.menu, "Select Master Folder")
-        if path:
-            self.project_mgr.save_master_path(path)
-            self.menu.update_status("✅ Storage Updated")
-
     def ui_link_project(self):
-        if not self.project_mgr.master_img_path: return
         project_root = QFileDialog.getExistingDirectory(self.menu, "Select Project Root")
         if not project_root: return
         success, _ = self.project_mgr.link_to_project(project_root)
         if success: self.menu.update_status("🔗 Linked Successfully!")
 
     def start_snipping(self):
-        if not self.project_mgr.master_img_path: return
         self.menu.hide()
         
         from gui.overlay import SnippingOverlay

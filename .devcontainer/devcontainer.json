@@ -3,10 +3,10 @@
     "image": "mcr.microsoft.com/devcontainers/python:3.12-bookworm",
     
     "runArgs": [
-        "--name", "${localWorkspaceFolderBasename}-container",
-        // GUIを表示するためにホストのネットワークとディスプレイを共有
-        "--net=host",
-        "-e", "DISPLAY=${localWorkspaceFolderEnv:DISPLAY}"
+        "--name", "${localWorkspaceFolderBasename}-container"
+        // PySide6 の GUI: Docker Desktop (Windows/Mac) では --net=host が使えず docker run が失敗します。
+        // Linux のネイティブ Docker で X11 を使う場合のみ、devcontainer.local.json に次を追加してください:
+        // "runArgs": ["--name","${localWorkspaceFolderBasename}-container","--net=host","-e","DISPLAY=${localWorkspaceFolderEnv:DISPLAY}"]
     ],
 
     "customizations": {
