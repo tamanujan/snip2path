@@ -1,4 +1,3 @@
-![Animation](https://github.com/user-attachments/assets/ea15b9fd-fbf7-412d-86c3-da0606c1620f)
 
 
 # snip2path
@@ -58,3 +57,6 @@ Produces `dist\snip2path\snip2path.exe`.
 
 - Windows 10 / 11
 - Python 3.10+ (for building from source)
+
+
+![Animation](https://github.com/user-attachments/assets/ea15b9fd-fbf7-412d-86c3-da0606c1620f)
