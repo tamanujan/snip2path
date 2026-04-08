@@ -8,7 +8,7 @@ python -m pip install pyinstaller
 
 :: ビルド実行
 echo Building...
-pyinstaller ^
+python -m PyInstaller ^
   --windowed ^
   --onedir ^
   --name snip2path ^
