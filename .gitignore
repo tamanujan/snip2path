@@ -18,3 +18,14 @@ venv/
 Thumbs.db
 Desktop.ini
 .DS_Store
+
+# PyInstaller ビルド成果物
+build/
+dist/
+*.spec
+
+# 個人用・ツール固有ファイル
+TODO.md
+debug_qt.py
+.cursorrules
+install-claude.sh

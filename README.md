@@ -1,31 +1,57 @@
 # snip2path
 
-CLI（Claude Code等）での開発体験を爆速にするための、超軽量スニッピングツール。
+A lightweight snipping tool that supercharges your CLI-based development workflow (Claude Code, etc.).
 
-## 解決したい課題
-- Docker/WSL環境からWindowsのクリップボード画像を直接参照するのが困難。
-- 画像を見せるために「保存 → パスをコピー → 伝える」という手順が発生し、思考が途切れる。
+[日本語版はこちら](README.ja.md)
 
-## 核心的な思想
-- **「履歴は不要。最新の一枚があればいい」**: 画像は常に `latest.png` に上書き。
-- **「パス管理を自動化」**: プロジェクトごとに `.snips/` フォルダを自動生成。
-- **「視覚情報の維持」**: スニップ後、その画像をデスクトップに浮かせておく。
+## Problem
 
-## 主要機能
-1. **プロジェクト登録**
-   - 指定したリポジトリ内に `.snips/` フォルダを自動作成。
-   - `.snips/.gitignore` を作成し、画像がGit管理下に入らないよう自動処理。
-2. **スニッピング & 上書き保存**
-   - ショートカット等で範囲選択。
-   - 登録済みプロジェクトの `./.snips/latest.png` を常に上書き。
-3. **クリップボード連携**
-   - 保存と同時に、相対パス `./.snips/latest.png` をクリップボードにコピー。
-4. **フローティング表示**
-   - スニップした画像を「普通のウィンドウ」として表示。
-   - 最前面固定にはせず、ユーザーが自由に配置・参照できるようにする。
-   - 次のスニップ時には、古いウィンドウを自動で閉じる。
+- Referencing Windows clipboard images from Docker/WSL environments is painful.
+- Sharing a screenshot requires "save → copy path → paste it" — breaking your flow every time.
 
-## 技術スタック（推奨）
+## Core Philosophy
+
+- **"One image is enough"** — Always overwrites `latest.png`. No history, no clutter.
+- **"Automate path management"** — Automatically creates a `.snips/` folder per project.
+- **"Keep the visual in view"** — Floats the snipped image on your desktop after capture.
+
+## Features
+
+1. **Project linking**
+   - Creates a `.snips/` folder inside your repository.
+   - Hard-links `.snips/latest.png` to the central `~/.snip2path/latest.png`.
+
+2. **Snip & overwrite**
+   - Select a region on screen.
+   - Always overwrites `./.snips/latest.png` — no versioning needed.
+
+3. **Clipboard integration**
+   - Copies the relative path `./.snips/latest.png` to the clipboard immediately after capture.
+
+4. **Floating preview**
+   - Displays the captured image as a floating window.
+   - Not pinned to front — place it wherever works for you.
+   - Automatically closes on the next snip.
+
+5. **Capture delay**
+   - Optional 3 / 5 / 7 second delay before capture, so you can set up the screen first.
+
+## Tech Stack
+
 - Python 3.10+
-- PySide6 (GUI / Overlay / Windows Management)
-- Pillow (Image Processing)
+- PySide6 (GUI / Overlay / Window management)
+- Pillow (Image capture & processing)
+- pyperclip (Clipboard)
+
+## Build (Windows)
+
+```bat
+build.bat
+```
+
+Produces `dist\snip2path\snip2path.exe`.
+
+## Requirements
+
+- Windows 10 / 11
+- Python 3.10+ (for building from source)
